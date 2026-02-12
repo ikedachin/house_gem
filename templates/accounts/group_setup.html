@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card" style="text-align: center;">
+    <h2>ようこそ、{% if user.nickname %}{{ user.nickname }}{% else %}{{ user.username }}{% endif %}さん！</h2>
+    <p>まずは家グループに参加するか、新しく作成しましょう。</p>
+
+    <div style="margin: 2rem 0;">
+        <a href="{% url 'create_group' %}" class="btn btn-primary">新しいグループを作る</a>
+    </div>
+    <div style="margin: 2rem 0;">
+        <a href="{% url 'join_group' %}" class="btn btn-secondary">招待コードで参加する</a>
+    </div>
+</div>
+{% endblock %}

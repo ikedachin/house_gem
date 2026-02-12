@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card">
+    <div style="text-align: center; margin-bottom: 2rem;">
+        <h2>🏆 今週のランキング ({{ year }}年 第{{ week_number }}週)</h2>
+    </div>
+
+    <div class="ranking-list">
+        {% for score in scores %}
+        <div class="ranking-item {% if forloop.first %}first-place{% endif %}">
+            <div class="rank-badge">{{ forloop.counter }}位</div>
+            <div class="user-info">
+                <span class="user-name">{{ score.user.nickname|default:score.user.username }}</span>
+            </div>
+            <div class="score-display">
+                {{ score.total_points }} <span class="unit">pts</span>
+            </div>
+        </div>
+        {% empty %}
+        <p style="text-align: center;">まだランキングデータがありません。家事を完了してポイントを獲得しましょう！</p>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    .ranking-list {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .ranking-item {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        background: #f9f9f9;
+        margin-bottom: 1rem;
+        border-radius: 8px;
+        border: 1px solid #eee;
+    }
+
+    .first-place {
+        background: #fff8e1;
+        border-color: #ffd700;
+        transform: scale(1.02);
+        box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2);
+    }
+
+    .rank-badge {
+        font-weight: bold;
+        font-size: 1.2rem;
+        width: 3rem;
+        text-align: center;
+        margin-right: 1rem;
+        color: var(--primary-color);
+    }
+
+    .user-info {
+        flex-grow: 1;
+        font-weight: bold;
+    }
+
+    .score-display {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .unit {
+        font-size: 0.8rem;
+        font-weight: normal;
+        color: #666;
+    }
+</style>
+{% endblock %}

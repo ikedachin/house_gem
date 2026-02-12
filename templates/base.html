@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Housework Gamification{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+    <header>
+        <a href="/" class="brand">🏠 HouseGem</a>
+        <nav>
+
+            {% if user.is_authenticated %}
+            <span>Hello, {{ user.nickname|default:user.username }}!</span>
+            <a href="{% url 'chore_list' %}">Tasks</a>
+            <a href="{% url 'ranking' %}">Ranking</a>
+            <a href="{% url 'analysis' %}">Analysis</a>
+            <a href="{% url 'logout' %}">Logout</a>
+            {% else %}
+            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'signup' %}">Signup</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main class="container">
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert {{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% block content %}
+        {% endblock %}
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Check for success messages to trigger confetti
+            const messages = document.querySelectorAll('.alert.success');
+            if (messages.length > 0) {
+                messages.forEach(msg => {
+                    if (msg.textContent.includes('ポイント獲得') || msg.textContent.includes('完了')) {
+                        confetti({
+                            particleCount: 150,
+                            spread: 70,
+                            origin: { y: 0.6 }
+                        });
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

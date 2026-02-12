@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="header-section">
+    <h1>{{ group.name }} のダッシュボード</h1>
+    <span class="badge">招待コード: {{ group.invite_code }}</span>
+</div>
+
+<div class="card">
+    <h3>メンバー</h3>
+    <ul>
+        {% for member in members %}
+        <li>
+            <span style="font-weight:bold;">{{ member.nickname|default:member.username }}</span>
+            {% if member == user %} (あなた) {% endif %}
+        </li>
+        {% empty %}
+        <li>ぼっちです...</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<div class="card">
+    <h3>最近の活動</h3>
+    <ul class="activity-list">
+        {% for execution in executions %}
+        <li class="activity-item">
+            <span class="activity-user">{{ execution.performer.nickname|default:execution.performer.username }}</span> が
+            <span class="activity-chore">「{{ execution.chore.title }}」</span> を完了！
+            <span class="activity-points">+{{ execution.points_earned }}pts</span>
+            <span class="activity-time">({{ execution.completed_at|date:"m/d H:i" }})</span>
+        </li>
+        {% empty %}
+        <li>まだ活動記録がありません。</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<div class="actions" style="margin-top: 2rem;">
+    <a href="{% url 'chore_list' %}" class="btn btn-primary">家事タスク一覧へ</a>
+    <a href="{% url 'ranking' %}" class="btn btn-secondary">ランキングを見る</a>
+</div>
+
+<style>
+    .activity-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .activity-item {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .activity-user {
+        font-weight: bold;
+        color: #333;
+    }
+
+    .activity-chore {
+        font-weight: bold;
+        color: var(--primary-color);
+    }
+
+    .activity-points {
+        background: #fff3cd;
+        color: #856404;
+        padding: 0.1rem 0.4rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        margin-left: 0.5rem;
+    }
+
+    .activity-time {
+        color: #999;
+        font-size: 0.8rem;
+        float: right;
+    }
+</style>
+{% endblock %}

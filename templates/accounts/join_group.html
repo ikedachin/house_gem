@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card">
+    <h2>招待コードで参加</h2>
+    <p>同居人から共有された8文字のコードを入力してください。</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-secondary">参加する</button>
+    </form>
+    <a href="{% url 'setup_group' %}">戻る</a>
+</div>
+{% endblock %}

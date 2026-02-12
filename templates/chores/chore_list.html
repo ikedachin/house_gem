@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="header-section">
+    <h1>House Chores</h1>
+    <a href="{% url 'chore_create' %}" class="btn btn-primary">+ 新しい家事</a>
+</div>
+
+<div class="chore-grid">
+    {% for chore in chores %}
+    <div class="card chore-card">
+        <div class="chore-header">
+            <h3>{{ chore.title }}</h3>
+            <span class="badge difficulty-{{ chore.difficulty }}">{{ chore.get_difficulty_display }}</span>
+        </div>
+        <p>{{ chore.description|truncatechars:100 }}</p>
+        <div class="chore-footer">
+            <span class="points">{{ chore.base_points }} pts</span>
+            <div class="chore-actions">
+                <a href="{% url 'chore_update' chore.pk %}">Edit</a>
+                <form method="post" action="{% url 'chore_complete' chore.pk %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-secondary btn-sm"
+                        onclick="return confirm('「{{ chore.title }}」を完了しましたか？')">やった！</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p>まだ家事が登録されていません。</p>
+    {% endfor %}
+</div>
+
+<style>
+    .header-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .chore-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .chore-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 0.5rem;
+    }
+
+    .chore-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #eee;
+    }
+
+    .points {
+        font-weight: bold;
+        color: var(--primary-color);
+        font-size: 1.2rem;
+    }
+
+    .difficulty-1 {
+        background-color: #d4edda;
+        color: #155724;
+    }
+
+    .difficulty-2 {
+        background-color: #cce5ff;
+        color: #004085;
+    }
+
+    .difficulty-3 {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+
+    .difficulty-4 {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+
+    .difficulty-5 {
+        background-color: #d6d8d9;
+        color: #1b1e21;
+        background: repeating-linear-gradient(45deg, #f8d7da, #f8d7da 10px, #fff 10px, #fff 20px);
+    }
+</style>
+{% endblock %}

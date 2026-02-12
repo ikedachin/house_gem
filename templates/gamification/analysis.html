@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card">
+    <div style="text-align: center; margin-bottom: 2rem;">
+        <h2>📊 分析ダッシュボード (直近30日)</h2>
+    </div>
+
+    <div class="charts-container">
+        <div class="chart-wrapper">
+            <h3>貢献度 (ポイント)</h3>
+            <canvas id="userChart"></canvas>
+        </div>
+        <div class="chart-wrapper">
+            <h3>よくやっている家事 (回数 Top 10)</h3>
+            <canvas id="choreChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Data from Django context
+    const userLabels = {{ user_labels| safe }};
+    const userData = {{ user_data| safe }};
+    const choreLabels = {{ chore_labels| safe }};
+    const choreData = {{ chore_data| safe }};
+
+    // User Pie Chart
+    const ctxUser = document.getElementById('userChart').getContext('2d');
+    new Chart(ctxUser, {
+        type: 'doughnut',
+        data: {
+            labels: userLabels,
+            datasets: [{
+                data: userData,
+                backgroundColor: [
+                    '#FF7F50', '#40E0D0', '#FFD700', '#FF6347', '#20B2AA', '#9370DB'
+                ],
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'bottom' }
+            }
+        }
+    });
+
+    // Chore Bar Chart
+    const ctxChore = document.getElementById('choreChart').getContext('2d');
+    new Chart(ctxChore, {
+        type: 'bar',
+        data: {
+            labels: choreLabels,
+            datasets: [{
+                label: '回数',
+                data: choreData,
+                backgroundColor: '#40E0D0',
+                borderRadius: 5
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { beginAtZero: true, ticks: { stepSize: 1 } }
+            },
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+</script>
+
+<style>
+    .charts-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+
+    .chart-wrapper {
+        background: #f9f9f9;
+        padding: 1rem;
+        border-radius: 8px;
+        text-align: center;
+    }
+</style>
+{% endblock %}

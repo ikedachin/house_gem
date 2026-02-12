@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card">
+    <h2>{% if object %}家事を編集{% else %}新しい家事を登録{% endif %}</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="actions" style="margin-top: 2rem;">
+            <button type="submit" class="btn btn-primary">保存する</button>
+            <a href="{% url 'chore_list' %}" class="btn btn-secondary" style="background: gray;">キャンセル</a>
+
+            {% if object %}
+            <a href="{% url 'chore_delete' object.pk %}" style="float: right; color: red;">削除する</a>
+            {% endif %}
+        </div>
+    </form>
+</div>
+{% endblock %}
